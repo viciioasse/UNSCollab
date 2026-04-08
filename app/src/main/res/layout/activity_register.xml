@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/login_bg"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:layout_marginBottom="24dp"
+            app:srcCompat="@drawable/logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/poppins_black" />
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Welcome to UNSCollab, where you can find intern and teammate"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="#A0A0A0"
+            android:layout_gravity="center"
+            android:fontFamily="@font/poppins_light"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_gravity="center"
+            android:backgroundTint="#1FABE1"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:layout_gravity="center"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#1FABE1"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_marginBottom="64dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up using"
+            android:textSize="16sp"
+            android:textColor="#A0A0A0"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnSSO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Continue with Google"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@android:color/transparent"
+            app:strokeColor="#1FABE1"
+            app:strokeWidth="2dp"
+            app:icon="@drawable/logo_google"
+            app:iconTint="#FFFFFF"
+            app:iconSize="24dp" />
+
+    </LinearLayout>
+
+</FrameLayout>
