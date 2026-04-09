@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/login_bg"
+        android:src="@drawable/background"
         android:scaleType="centerCrop" />
 
     <View
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="250dp"
             android:layout_marginBottom="24dp"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo_unscollab" />
 
         <TextView
             android:layout_width="match_parent"
