@@ -1,6 +1,7 @@
 package com.projek.unscollab
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val btnSignUp : Button = findViewById(R.id.btn_signUp)
         btnSignUp.setOnClickListener(this)
+
+        val btnGoogle : Button = findViewById(R.id.btn_Google)
+        btnGoogle.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
@@ -37,6 +41,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_signUp -> {
                 val registerIntent = Intent(this@MainActivity, RegisterActivity::class.java)
                 startActivity(registerIntent)
+            }
+
+            R.id.btn_Google -> {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse("https://accounts.google.com/")
+                startActivity(intent)
             }
         }
     }

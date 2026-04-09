@@ -84,7 +84,7 @@
             android:layout_marginBottom="8dp" />
 
         <Button
-            android:id="@+id/btn_login_company"
+            android:id="@+id/btn_Google"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
