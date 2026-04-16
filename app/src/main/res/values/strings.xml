@@ -2,4 +2,20 @@
     <string name="app_name">UNSCollab</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="hello_mahasiswa_uns">Halo, Mahasiswa UNS👋</string>
+    <string name="search_placeholder">Search internship or teammate</string>
+    <string name="recommended">Recommended</string>
+    <string name="filter_all">All</string>
+    <string name="filter_internships">Internships</string>
+    <string name="filter_teammate">Teammate</string>
+    <string name="job_title_placeholder">Frontend Developer Intern</string>
+    <string name="company_name_placeholder">Tech Startup Indonesia</string>
+    <string name="location_placeholder">Jakarta (Remote)</string>
+    <string name="duration_placeholder">3-6 bulan</string>
+    <string name="salary_placeholder">Rp 2.000.000 - 3.000.000/bulan</string>
+    <string name="posted_time_placeholder">2 hari yang lalu</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_activity">Activity</string>
+    <string name="nav_notification">Notification</string>
+    <string name="nav_profile">Profile</string>
 </resources>
