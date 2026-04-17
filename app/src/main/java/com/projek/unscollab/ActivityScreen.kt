@@ -160,6 +160,7 @@ fun InternshipCard(item: InternshipItem) {
                         item.title,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
+                        color = Color.Black,
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.width(8.dp))
@@ -224,7 +225,7 @@ fun TeamCard(item: TeamItem) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(item.projectName, fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                    Text(item.projectName, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Black,
                         modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(8.dp))
                     StatusChip(item.status)
@@ -331,7 +332,8 @@ fun ActivityScreen() {
         Text(
             "Activity",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp
+            fontSize = 22.sp,
+            color = Color.Black
         )
 
         Spacer(Modifier.height(16.dp))
