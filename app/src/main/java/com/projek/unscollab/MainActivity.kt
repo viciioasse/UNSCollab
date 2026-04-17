@@ -11,17 +11,19 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.projek.unscollab.ui.NotificationScreen
 import com.projek.unscollab.ui.theme.UNSCollabTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
 
-    var currentScreen by remember { mutableStateOf("notification") }
+    var currentScreen by remember { mutableStateOf("home") }
 
     Scaffold(
         bottomBar = {
@@ -66,63 +68,33 @@ fun BottomBar(
     currentScreen: String,
     onNavigate: (String) -> Unit
 ) {
-    NavigationBar(
-        containerColor = Color(0xFF1FABE1) // Sidebar background color updated
-    ) {
+    NavigationBar{
         NavigationBarItem(
             selected = currentScreen == "home",
             onClick = { onNavigate("home") },
             icon = { Icon(Icons.Default.Home, contentDescription = null) },
-            label = { Text("Home") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.DarkGray,
-                unselectedTextColor = Color.DarkGray,
-                indicatorColor = Color.White.copy(alpha = 0.3f)
-            )
+            label = { Text("Home") }
         )
 
         NavigationBarItem(
             selected = currentScreen == "activity",
             onClick = { onNavigate("activity") },
             icon = { Icon(Icons.Default.List, contentDescription = null)},
-            label = { Text("Activity") },
-             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.DarkGray,
-                unselectedTextColor = Color.DarkGray,
-                indicatorColor = Color.White.copy(alpha = 0.3f)
-            )
+            label = { Text("Activity") }
         )
 
         NavigationBarItem(
             selected = currentScreen == "notification",
             onClick = { onNavigate("notification") },
             icon = { Icon(Icons.Default.Notifications, contentDescription = null)},
-            label = { Text("Notification") },
-             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.DarkGray,
-                unselectedTextColor = Color.DarkGray,
-                indicatorColor = Color.White.copy(alpha = 0.3f)
-            )
+            label = { Text("Notification") }
         )
 
         NavigationBarItem(
             selected = currentScreen == "profile",
             onClick = { onNavigate("profile") },
             icon = { Icon(Icons.Default.AccountCircle, contentDescription = null) },
-            label = { Text("Profile") },
-             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.DarkGray,
-                unselectedTextColor = Color.DarkGray,
-                indicatorColor = Color.White.copy(alpha = 0.3f)
-            )
+            label = {Text("Profile")}
         )
     }
 }
@@ -138,6 +110,13 @@ fun HomeScreen() {
 fun ActivityScreen() {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Activity Screen")
+    }
+}
+
+@Composable
+fun NotificationScreen() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Notif Screen")
     }
 }
 
