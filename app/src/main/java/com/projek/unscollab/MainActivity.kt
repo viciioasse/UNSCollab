@@ -58,6 +58,12 @@ fun MainScreen() {
                 "notification" -> NotificationScreen()
                 "profile" -> ProfileScreen()
             }
+            when (currentScreen) {
+                "home" -> HomeScreen()
+                "activity" -> ActivityScreen()
+                "notification" -> NotificationScreen()
+                "profile" -> ProfileScreen()
+            }
         }
     }
 }
@@ -117,13 +123,6 @@ fun ActivityScreen() {
 fun NotificationScreen() {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Notif Screen")
-    }
-}
-
-@Composable
-fun ProfileScreen() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Profile Screen")
     }
 }
 
