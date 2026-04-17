@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.projek.unscollab.ui.HomeScreen
+import com.projek.unscollab.home.HomeScreen
+import com.projek.unscollab.navigation.NavGraph
 import com.projek.unscollab.ui.theme.UNSCollabTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             UNSCollabTheme {
-                HomeScreen()
+                NavGraph()
             }
         }
     }

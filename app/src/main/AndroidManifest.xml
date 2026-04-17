@@ -12,6 +12,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UNSCollab">
         <activity
+            android:name=".navigation.navGraph"
+            android:exported="false"
+            android:label="@string/title_activity_nav_graph"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".components.UNSCollabButtonBar"
+            android:exported="false"
+            android:label="@string/title_activity_unscollab_button_bar"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".profile.ProfileScreen"
+            android:exported="false"
+            android:label="@string/title_activity_profile_screen"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".activity.ActivityScreen"
+            android:exported="false"
+            android:label="@string/title_activity_screen"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".navigation.NavGraph"
+            android:exported="false"
+            android:label="@string/title_activity_nav_graph"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".components.UNSCollabBottomBar"
+            android:exported="false"
+            android:label="@string/title_activity_unscollab_bottom_bar"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
+            android:name=".notification.NotificationScreen"
+            android:exported="false"
+            android:label="@string/title_activity_notification_screen"
+            android:theme="@style/Theme.UNSCollab" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"

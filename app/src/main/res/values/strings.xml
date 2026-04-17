@@ -18,4 +18,14 @@
     <string name="nav_activity">Activity</string>
     <string name="nav_notification">Notification</string>
     <string name="nav_profile">Profile</string>
+    <string name="team_name_placeholder">Tim UNSCollab</string>
+    <string name="team_category_placeholder">Tim untuk PKM</string>
+    <string name="team_desc_placeholder">Tim ini mengembangkan aplikasi student collaboration untuk mahasiswa UNS</string>
+    <string name="team_members_placeholder">5 Anggota</string>
+    <string name="title_activity_notification_screen">NotificationScreen</string>
+    <string name="title_activity_unscollab_bottom_bar">UNSCollabBottomBar</string>
+    <string name="title_activity_nav_graph">NavGraph</string>
+    <string name="title_activity_screen">ActivityScreen</string>
+    <string name="title_activity_profile_screen">ProfileScreen</string>
+    <string name="title_activity_unscollab_button_bar">UNSCollabButtonBar</string>
 </resources>
