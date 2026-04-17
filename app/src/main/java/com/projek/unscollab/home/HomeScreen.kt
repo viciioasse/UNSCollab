@@ -3,16 +3,12 @@ package com.projek.unscollab.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +28,7 @@ import com.projek.unscollab.ui.theme.UNSCollabTheme
 fun HomeScreen(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = Color.White
+        color = Color(0xFFF8F8F8)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -84,34 +80,25 @@ private fun HeaderSection() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(120.dp)
+            .background(Color(0xFF1FABE1))
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.background),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.FillWidth
-        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_unscollab),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(64.dp)
-            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.hello_mahasiswa_uns),
                 color = Color.White,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             SearchBar()
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -121,38 +108,38 @@ private fun SearchBar() {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp),
-        shape = RoundedCornerShape(24.dp),
+            .height(40.dp),
+        shape = RoundedCornerShape(20.dp),
         color = Color.White
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Search,
+                painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null,
-                tint = Color.Gray,
-                modifier = Modifier
-                    .size(24.dp)
+                tint = Color.LightGray,
+                modifier = Modifier.size(18.dp)
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.search_placeholder),
-                color = Color.Gray,
-                fontSize = 14.sp
+                color = Color.LightGray,
+                fontSize = 12.sp
             )
         }
     }
 }
-
 
 @Composable
 fun FilterSection(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -197,6 +184,7 @@ fun FilterChip(
     }
 }
 
+
 @Composable
 fun JobCard(
     title: String,
@@ -207,12 +195,13 @@ fun JobCard(
     postedTime: String,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFBDBDBD))
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -220,7 +209,7 @@ fun JobCard(
                     painter = painterResource(id = R.drawable.logo_uns),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
@@ -229,34 +218,34 @@ fun JobCard(
                     Text(
                         text = title,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = Color.Black
                     )
-                    Text(text = company, color = Color.Gray, fontSize = 14.sp)
+                    Text(text = company, color = Color.Gray, fontSize = 13.sp)
                 }
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    painter = painterResource(id = R.drawable.ic_bookmark),
                     contentDescription = null,
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .size(24.dp)
+                    tint = Color.DarkGray,
+                    modifier = Modifier.size(24.dp)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.LocationOn,
+                    painter = painterResource(id = R.drawable.ic_location),
                     contentDescription = null,
                     tint = Color.Gray,
-                    modifier = Modifier,
+                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(text = location, fontSize = 12.sp, color = Color.Gray)
                 Spacer(modifier = Modifier.width(16.dp))
                 Icon(
-                    imageVector = Icons.Default.DateRange,
+                    painter = painterResource(id = R.drawable.ic_clock),
                     contentDescription = null,
                     tint = Color.Gray,
+                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(text = duration, fontSize = 12.sp, color = Color.Gray)
@@ -264,23 +253,23 @@ fun JobCard(
             Spacer(modifier = Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "$",
+                    text = "Rp",
                     color = Color(0xFF2E7D32),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = salary,
+                    text = salary.replace("Rp ", ""),
                     color = Color(0xFF2E7D32),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = Color.Gray.copy(alpha = 0.5f), thickness = 1.dp)
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = postedTime, fontSize = 12.sp, color = Color.Gray)
+            HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f), thickness = 1.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = postedTime, fontSize = 11.sp, color = Color.Gray)
         }
     }
 }
@@ -294,12 +283,13 @@ fun TeamCard(
     postedTime: String,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFBDBDBD))
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -307,7 +297,7 @@ fun TeamCard(
                     painter = painterResource(id = R.drawable.logo_uns),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
@@ -316,40 +306,45 @@ fun TeamCard(
                     Text(
                         text = title,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = Color.Black
                     )
-                    Text(text = category, color = Color.Gray, fontSize = 14.sp)
+                    Text(text = category, color = Color.Gray, fontSize = 13.sp)
                 }
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    painter = painterResource(id = R.drawable.ic_bookmark),
                     contentDescription = null,
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .size(24.dp)
+                    tint = Color.DarkGray,
+                    modifier = Modifier.size(24.dp)
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = description, fontSize = 14.sp, color = Color.Gray)
+            Text(
+                text = description,
+                fontSize = 14.sp,
+                color = Color.Gray,
+                lineHeight = 18.sp
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.Person,
+                    painter = painterResource(id = R.drawable.ic_people),
                     contentDescription = null,
-                    tint = Color(0xFF2E7D32)
+                    tint = Color(0xFF2E7D32),
+                    modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = members,
                     color = Color(0xFF2E7D32),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = Color.Gray.copy(alpha = 0.5f), thickness = 1.dp)
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = postedTime, fontSize = 12.sp, color = Color.Gray)
+            HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f), thickness = 1.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = postedTime, fontSize = 11.sp, color = Color.Gray)
         }
     }
 }
