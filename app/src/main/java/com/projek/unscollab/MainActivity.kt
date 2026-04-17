@@ -107,13 +107,6 @@ fun HomeScreen() {
 }
 
 @Composable
-fun ActivityScreen() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Activity Screen")
-    }
-}
-
-@Composable
 fun NotificationScreen() {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Notif Screen")
