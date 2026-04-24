@@ -22,10 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.projek.unscollab.R
+import com.projek.unscollab.navigation.LocalBackStack
+import com.projek.unscollab.navigation.Route
 import com.projek.unscollab.ui.theme.UNSCollabTheme
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+    val backStack = LocalBackStack.current
     Surface(
         modifier = modifier.fillMaxSize(),
         color = Color(0xFFF8F8F8)
@@ -46,7 +49,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     location = stringResource(R.string.location_placeholder),
                     duration = stringResource(R.string.duration_placeholder),
                     salary = stringResource(R.string.salary_placeholder),
-                    postedTime = stringResource(R.string.posted_time_placeholder)
+                    postedTime = stringResource(R.string.posted_time_placeholder),
+                    onClick = { backStack.add(Route.Detail("JOB-001")) }
                 )
             }
             item {
@@ -65,7 +69,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     location = stringResource(R.string.location_placeholder),
                     duration = stringResource(R.string.duration_placeholder),
                     salary = stringResource(R.string.salary_placeholder),
-                    postedTime = stringResource(R.string.posted_time_placeholder)
+                    postedTime = stringResource(R.string.posted_time_placeholder),
+                    onClick = { backStack.add(Route.Detail("JOB-002")) }
                 )
             }
             item {
@@ -193,12 +198,14 @@ fun JobCard(
     duration: String,
     salary: String,
     postedTime: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)

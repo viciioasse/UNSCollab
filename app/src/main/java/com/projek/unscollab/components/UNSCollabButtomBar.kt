@@ -7,31 +7,30 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.projek.unscollab.R
+import com.projek.unscollab.navigation.LocalBackStack
+import com.projek.unscollab.navigation.Route
 
 @Composable
-fun UNSCollabBottomBar(navController: NavController) {
+fun UNSCollabBottomBar() {
+    val backStack = LocalBackStack.current
+    val currentRoute = backStack.lastOrNull()
+
     NavigationBar(
         containerColor = Color(0xFF1FABE1),
         contentColor = Color.White
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
         val items = listOf(
-            NavigationItem("home", R.string.nav_home, R.drawable.icon_home),
-            NavigationItem("activity", R.string.nav_activity, R.drawable.icon_activity),
-            NavigationItem("notification", R.string.nav_notification, R.drawable.icon_notification),
-            NavigationItem("profile", R.string.nav_profile, R.drawable.icon_profile)
+            NavigationItem(Route.Home, R.string.nav_home, R.drawable.icon_home),
+            NavigationItem(Route.Activity, R.string.nav_activity, R.drawable.icon_activity),
+            NavigationItem(Route.Notification, R.string.nav_notification, R.drawable.icon_notification),
+            NavigationItem(Route.Profile, R.string.nav_profile, R.drawable.icon_profile)
         )
 
         items.forEach { item ->
@@ -40,13 +39,9 @@ fun UNSCollabBottomBar(navController: NavController) {
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        // Navigation 3 style: replace or manage stack
+                        backStack.clear()
+                        backStack.add(item.route)
                     }
                 },
                 icon = {
@@ -75,4 +70,4 @@ fun UNSCollabBottomBar(navController: NavController) {
     }
 }
 
-data class NavigationItem(val route: String, val labelRes: Int, val iconRes: Int)
+data class NavigationItem(val route: Route, val labelRes: Int, val iconRes: Int)
