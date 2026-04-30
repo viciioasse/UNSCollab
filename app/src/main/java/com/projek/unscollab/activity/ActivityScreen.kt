@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.projek.unscollab.ui.theme.UNSCollabTheme
+import com.projek.unscollab.components.DeleteConfirmationDialog
 
 val PrimaryBlue   = Color(0xFF1FABE1)
 val LightBlue     = Color(0xFFEEF2FF)
@@ -127,7 +128,10 @@ private fun SummaryItem(count: Int, label: String) {
 }
 
 @Composable
-fun InternshipCard(item: InternshipItem) {
+fun InternshipCard(
+    item: InternshipItem,
+    onDelete: () -> Unit = {}
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -192,7 +196,7 @@ fun InternshipCard(item: InternshipItem) {
                         Text(" Applied: ${item.appliedDate}", color = Color.Gray, fontSize = 12.sp)
                     }
                     Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null,
-                        tint = Color.LightGray, modifier = Modifier.size(14.dp))
+                        tint = Color.LightGray, modifier = Modifier.size(14.dp).clickable { onDelete() })
                 }
             }
         }
@@ -312,6 +316,8 @@ fun ActivityTabRow(selectedTab: Int, onTabSelected: (Int) -> Unit, tabs: List<St
 @Composable
 fun ActivityScreen() {
     var selectedTab by remember { mutableIntStateOf(0) }
+    var deleteItemId by remember { mutableStateOf<String?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     val internshipMenunggu = sampleInternships.count { it.status == StatusAplikasi.MENUNGGU }
     val internshipDiterima = sampleInternships.count { it.status == StatusAplikasi.DITERIMA }
@@ -357,11 +363,16 @@ fun ActivityScreen() {
         }
 
         Spacer(Modifier.height(16.dp))
-
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (selectedTab == 0) {
                 items(sampleInternships) { item ->
-                    InternshipCard(item)
+                    InternshipCard(
+                        item = item,
+                        onDelete = {
+                            deleteItemId = item.title
+                            showDeleteDialog = true
+                        }
+                    )
                 }
             } else {
                 items(sampleTeams) { item ->
@@ -370,6 +381,22 @@ fun ActivityScreen() {
             }
             item { Spacer(Modifier.height(16.dp)) }
         }
+    }
+
+    // Delete Confirmation Dialog
+    if (showDeleteDialog && deleteItemId != null) {
+        DeleteConfirmationDialog(
+            itemName = deleteItemId!!,
+            onConfirm = {
+                showDeleteDialog = false
+                deleteItemId = null
+            },
+            onDismiss = {
+                showDeleteDialog = false
+                deleteItemId = null
+            },
+            isVisible = true
+        )
     }
 }
 
