@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.projek.unscollab.ui.theme.UNSCollabTheme
 import com.projek.unscollab.components.DeleteConfirmationDialog
+import com.projek.unscollab.components.SuccessDialog
 
 val PrimaryBlue   = Color(0xFF1FABE1)
 val LightBlue     = Color(0xFFEEF2FF)
@@ -318,6 +319,8 @@ fun ActivityScreen() {
     var selectedTab by remember { mutableIntStateOf(0) }
     var deleteItemId by remember { mutableStateOf<String?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var deletedItemName by remember { mutableStateOf("") }
 
     val internshipMenunggu = sampleInternships.count { it.status == StatusAplikasi.MENUNGGU }
     val internshipDiterima = sampleInternships.count { it.status == StatusAplikasi.DITERIMA }
@@ -363,6 +366,7 @@ fun ActivityScreen() {
         }
 
         Spacer(Modifier.height(16.dp))
+
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (selectedTab == 0) {
                 items(sampleInternships) { item ->
@@ -383,19 +387,29 @@ fun ActivityScreen() {
         }
     }
 
-    // Delete Confirmation Dialog
     if (showDeleteDialog && deleteItemId != null) {
         DeleteConfirmationDialog(
             itemName = deleteItemId!!,
             onConfirm = {
+                deletedItemName = deleteItemId!!
                 showDeleteDialog = false
                 deleteItemId = null
+                showSuccessDialog = true
             },
             onDismiss = {
                 showDeleteDialog = false
                 deleteItemId = null
             },
             isVisible = true
+        )
+    }
+
+    if (showSuccessDialog) {
+        SuccessDialog(
+            title = "Berhasil Dihapus",
+            message = "Lamaran \"$deletedItemName\" telah berhasil dihapus.",
+            onDismiss = { showSuccessDialog = false },
+            buttonText = "OK"
         )
     }
 }
