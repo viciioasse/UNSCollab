@@ -32,7 +32,7 @@ val ContentBackground = Color(0xFFFFFFFF)
 val ScreenBackground = Color(0xFFF2F4F7)
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
 
     val namaUser = "Jordan Hayes"
@@ -40,12 +40,11 @@ fun ProfileScreen() {
     val prodiUser = "Data Science"
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
             .verticalScroll(scrollState)
     ) {
-        // --- HEADER SOLID COLOR ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +62,6 @@ fun ProfileScreen() {
             )
         }
 
-        // --- PROFILE SECTION ---
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -118,7 +116,6 @@ fun ProfileScreen() {
             }
         }
 
-        // --- DASHBOARD DATA (Berdasarkan Atribut Laporan) ---
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
@@ -132,21 +129,18 @@ fun ProfileScreen() {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // Kartu Portfolio
             InfoCard(
                 title = "Portfolio",
                 items = listOf("E-Commerce Backend", "Portfolio Site", "Data Analytics Tool"),
                 icon = Icons.Default.ThumbUp
             )
 
-            // Kartu Pengalaman
             InfoCard(
                 title = "Experience",
                 items = listOf("Backend Intern", "Open Source Contributor"),
                 icon = Icons.Default.Info
             )
 
-            // Kartu Prestasi
             InfoCard(
                 title = "Awards",
                 items = listOf("Best Researcher 2025", "Hackathon Finalist"),

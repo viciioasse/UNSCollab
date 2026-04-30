@@ -69,13 +69,12 @@ val sampleNotifications = listOf(
 )
 
 @Composable
-fun NotificationScreen() {
+fun NotificationScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF5F7FA))
     ) {
-        // Header Section
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color.White,
@@ -99,7 +98,6 @@ fun NotificationScreen() {
             }
         }
 
-        // Notification List
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
@@ -128,7 +126,6 @@ fun NotificationItem(notification: Notification) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.Top
         ) {
-            // Icon Indicator
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -167,18 +164,18 @@ fun NotificationItem(notification: Notification) {
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(4.dp))
-                
+
                 Text(
                     text = notification.description,
                     fontSize = 13.sp,
                     color = Color.DarkGray,
                     lineHeight = 18.sp
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = notification.time,
                     fontSize = 11.sp,

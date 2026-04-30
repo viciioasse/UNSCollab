@@ -34,6 +34,8 @@ import com.projek.unscollab.R
 import com.projek.unscollab.components.ConfirmationAlertDialog
 import com.projek.unscollab.components.SuccessAlertDialog
 import com.projek.unscollab.navigation.LocalBackStack
+import com.projek.unscollab.activity.InternshipItem
+import com.projek.unscollab.activity.StatusAplikasi
 
 private val PrimaryBlue = Color(0xFF1FABE1)
 private val DarkBlue = Color(0xFF1487B3)
@@ -45,7 +47,8 @@ private val BackgroundGray = Color(0xFFF5F7FA)
 @Composable
 fun JobDetailScreen(
     jobId: String,
-    savedItems: androidx.compose.runtime.MutableState<Set<String>> = mutableStateOf(emptySet())
+    savedItems: androidx.compose.runtime.MutableState<Set<String>> = mutableStateOf(emptySet()),
+    onApply: (InternshipItem) -> Unit = {}
 ) {
     val backStack = LocalBackStack.current
     var isSaved by remember { mutableStateOf(savedItems.value.contains(jobId)) }
@@ -85,13 +88,26 @@ fun JobDetailScreen(
             )
         },
         bottomBar = {
+            // Sticky Apply Button di bawah
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shadowElevation = 12.dp,
                 color = Color.White
             ) {
                 Button(
-                    onClick = { showSuccessDialog = true },
+                    onClick = {
+                        onApply(
+                            InternshipItem(
+                                title = "Android Developer",
+                                company = "PT. Tech Indonesia",
+                                location = "Jakarta",
+                                appliedDate = java.time.LocalDate.now()
+                                    .format(java.time.format.DateTimeFormatter.ofPattern("d MMMM yyyy", java.util.Locale("id"))),
+                                status = StatusAplikasi.MENUNGGU
+                            )
+                        )
+                        showSuccessDialog = true
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -120,6 +136,7 @@ fun JobDetailScreen(
                     .background(BackgroundGray)
                     .verticalScroll(rememberScrollState())
             ) {
+                // ── Hero Header ──────────────────────────────────────────────
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,6 +147,7 @@ fun JobDetailScreen(
                             )
                         )
                 ) {
+                    // Dekorasi lingkaran latar
                     Box(
                         modifier = Modifier
                             .size(180.dp)
@@ -145,6 +163,7 @@ fun JobDetailScreen(
                             .background(Color.White.copy(alpha = 0.07f), CircleShape)
                     )
 
+                    // Logo perusahaan
                     Card(
                         modifier = Modifier
                             .size(90.dp)
@@ -165,6 +184,7 @@ fun JobDetailScreen(
                     }
                 }
 
+                // ── Title Card ───────────────────────────────────────────────
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -193,6 +213,7 @@ fun JobDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Badge status
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             StatusBadge(text = "Magang", backgroundColor = LightBlue, textColor = PrimaryBlue)
                             StatusBadge(text = "Aktif", backgroundColor = Color(0xFFE8F5E9), textColor = GreenAccent)
@@ -201,6 +222,7 @@ fun JobDetailScreen(
                     }
                 }
 
+                // ── Info Cards ───────────────────────────────────────────────
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -215,6 +237,7 @@ fun JobDetailScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // ── Deskripsi ────────────────────────────────────────────────
                 SectionCard(title = "Deskripsi Pekerjaan") {
                     Text(
                         text = "Kami sedang mencari Android Developer yang berpengalaman untuk mengembangkan aplikasi mobile terbaru kami. Anda akan bekerja bersama tim yang berdedikasi menggunakan teknologi terkini dalam ekosistem Android.",
@@ -226,6 +249,7 @@ fun JobDetailScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // ── Persyaratan ──────────────────────────────────────────────
                 SectionCard(title = "Persyaratan") {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         RequirementRow("Mahasiswa/i semester 6/7 Informatika, Teknik Industri, Sains Data, atau jurusan terkait ")
@@ -239,6 +263,7 @@ fun JobDetailScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // ── Benefit ──────────────────────────────────────────────────
                 SectionCard(title = "Keuntungan") {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         BenefitRow("💵", "Gaji kompetitif sesuai pengalaman")
@@ -251,6 +276,7 @@ fun JobDetailScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // ── Share Button (secondary) ─────────────────────────────────
                 OutlinedButton(
                     onClick = { showShareDialog = true },
                     modifier = Modifier
@@ -275,6 +301,7 @@ fun JobDetailScreen(
         }
     }
 
+    // Dialog Sukses Lamar
     if (showSuccessDialog) {
         SuccessAlertDialog(
             title = "✅ Lamaran Terkirim!",
@@ -284,6 +311,7 @@ fun JobDetailScreen(
         )
     }
 
+    // Dialog Bagikan
     if (showShareDialog) {
         ConfirmationAlertDialog(
             title = "Bagikan Lowongan",
@@ -295,6 +323,8 @@ fun JobDetailScreen(
         )
     }
 }
+
+// ── Reusable sub-composables ─────────────────────────────────────────────────
 
 @Composable
 private fun StatusBadge(text: String, backgroundColor: Color, textColor: Color) {

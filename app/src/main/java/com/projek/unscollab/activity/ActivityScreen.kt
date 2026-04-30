@@ -315,23 +315,26 @@ fun ActivityTabRow(selectedTab: Int, onTabSelected: (Int) -> Unit, tabs: List<St
 }
 
 @Composable
-fun ActivityScreen() {
+fun ActivityScreen(
+    internshipList: androidx.compose.runtime.snapshots.SnapshotStateList<InternshipItem> = androidx.compose.runtime.mutableStateListOf(),
+    modifier: Modifier = Modifier
+) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var deleteItemId by remember { mutableStateOf<String?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
     var deletedItemName by remember { mutableStateOf("") }
 
-    val internshipMenunggu = sampleInternships.count { it.status == StatusAplikasi.MENUNGGU }
-    val internshipDiterima = sampleInternships.count { it.status == StatusAplikasi.DITERIMA }
-    val internshipDitolak = sampleInternships.count { it.status == StatusAplikasi.DITOLAK }
+    val internshipMenunggu = internshipList.count { it.status == StatusAplikasi.MENUNGGU }
+    val internshipDiterima = internshipList.count { it.status == StatusAplikasi.DITERIMA }
+    val internshipDitolak  = internshipList.count { it.status == StatusAplikasi.DITOLAK }
 
     val teamMenunggu = sampleTeams.count { it.status == StatusAplikasi.MENUNGGU }
     val teamDiterima = sampleTeams.count { it.status == StatusAplikasi.DITERIMA }
     val teamDitolak = sampleTeams.count { it.status == StatusAplikasi.DITOLAK }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(PageBg)
             .padding(horizontal = 16.dp)
@@ -348,7 +351,7 @@ fun ActivityScreen() {
         Spacer(Modifier.height(16.dp))
 
         val tabLabels = listOf(
-            "Internship (${sampleInternships.size})",
+            "Internship (${internshipList.size})",
             "Team (${sampleTeams.size})"
         )
         ActivityTabRow(
@@ -369,7 +372,7 @@ fun ActivityScreen() {
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (selectedTab == 0) {
-                items(sampleInternships) { item ->
+                items(internshipList, key = { it.title }) { item ->
                     InternshipCard(
                         item = item,
                         onDelete = {
@@ -392,6 +395,7 @@ fun ActivityScreen() {
             itemName = deleteItemId!!,
             onConfirm = {
                 deletedItemName = deleteItemId!!
+                internshipList.removeAll { it.title == deleteItemId }
                 showDeleteDialog = false
                 deleteItemId = null
                 showSuccessDialog = true
