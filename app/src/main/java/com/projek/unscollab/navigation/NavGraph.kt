@@ -8,9 +8,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.projek.unscollab.ProfileScreen
 import com.projek.unscollab.activity.ActivityScreen
 import com.projek.unscollab.activity.InternshipItem
@@ -41,8 +39,12 @@ fun NavGraph() {
     CompositionLocalProvider(LocalBackStack provides backStack) {
         val currentRoute = backStack.lastOrNull() ?: Route.Landing
 
+        BackHandler(enabled = backStack.size > 1) {
+            backStack.removeLastOrNull()
+        }
+
         val isDetailScreen = currentRoute is Route.JobDetail || currentRoute is Route.TeamDetail
-        val isAuthScreen = currentRoute is Route.Landing
+        val isAuthScreen   = currentRoute is Route.Landing
                 || currentRoute is Route.Login
                 || currentRoute is Route.Register
 

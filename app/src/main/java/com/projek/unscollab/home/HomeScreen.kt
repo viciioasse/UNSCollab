@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -82,7 +83,6 @@ fun HomeScreen(modifier: Modifier = Modifier, savedItems: Set<String> = emptySet
         TeamItem("TEAM-002", "WIBAWA Reguler",   "Program Pembinaan",  "Kami mencari mahasiswa/i yang siap mengikuti program WIBAWA", "4/6 Members", "1 jam yang lalu")
     )
 
-    // Tab filter
     val tabFilteredJobs = when (selectedFilter) {
         "internships" -> jobItems.filter { it.type == "internship" }
         "teammates"   -> emptyList()
@@ -115,7 +115,8 @@ fun HomeScreen(modifier: Modifier = Modifier, savedItems: Set<String> = emptySet
             item {
                 HeaderSection(
                     searchQuery = searchQuery,
-                    onSearchChange = { searchQuery = it }
+                    onSearchChange = { searchQuery = it },
+                    onFilterClick = { showFilterSheet = true }
                 )
             }
             item {
@@ -185,7 +186,8 @@ fun HomeScreen(modifier: Modifier = Modifier, savedItems: Set<String> = emptySet
 @Composable
 private fun HeaderSection(
     searchQuery: String,
-    onSearchChange: (String) -> Unit
+    onSearchChange: (String) -> Unit,
+    onFilterClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -201,12 +203,36 @@ private fun HeaderSection(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Temukan lowongan internship & tim terbaik untukmu",
+                text = "Temukan lowongan & tim terbaik untukmu",
                 color = Color.White.copy(alpha = 0.85f),
                 fontSize = 13.sp,
                 modifier = Modifier.padding(top = 2.dp, bottom = 14.dp)
             )
-            SearchBar(query = searchQuery, onQueryChange = onSearchChange)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    SearchBar(query = searchQuery, onQueryChange = onSearchChange)
+                }
+                Surface(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clickable { onFilterClick() },
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White.copy(alpha = 0.2f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = "Filter",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
