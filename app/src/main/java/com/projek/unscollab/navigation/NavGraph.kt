@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.projek.unscollab.ProfileScreen
+import com.projek.unscollab.profile.ProfileScreen
 import com.projek.unscollab.activity.ActivityScreen
 import com.projek.unscollab.activity.InternshipItem
 import com.projek.unscollab.activity.StatusAplikasi
