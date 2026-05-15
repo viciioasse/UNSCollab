@@ -11,14 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,14 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.projek.unscollab.R
 import com.projek.unscollab.ui.theme.UNSCollabTheme
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 
-// --- DATA CLASSES ---
 data class PortfolioItem(
     val id: String = UUID.randomUUID().toString(),
     val title: String,
@@ -57,38 +49,79 @@ data class ExperienceItem(
     val duration: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
-    // --- STATE PROFIL ---
-    var userName by remember { mutableStateOf("Jordan Hayes") }
-    var userId by remember { mutableStateOf("U8129034") }
-    var userProdi by remember { mutableStateOf("Data Science") }
-    var userAbout by remember { mutableStateOf("Halo! Saya adalah mahasiswa Data Science yang antusias terhadap pengembangan backend dan analitik data.") }
+class ProfileViewModel : ViewModel() {
+    var userName by mutableStateOf("Jordan Hayes")
+    var userId by mutableStateOf("U8129034")
+    var userProdi by mutableStateOf("Data Science")
+    var userAbout by mutableStateOf("Halo! Saya adalah mahasiswa Data Science yang antusias terhadap pengembangan backend dan analitik data.")
 
-    var selectedTab by remember { mutableStateOf("Portofolio") }
-    var showEditDialog by remember { mutableStateOf(false) }
-
-    // --- STATE CRUD ---
-    val portfolioItems = remember { mutableStateListOf(
+    val portfolioItems = mutableStateListOf(
         PortfolioItem(title = "E-Commerce Backend", role = "Backend Developer", description = "Membangun sistem backend dengan microservices.", date = "Jan 2025 - Sekarang"),
         PortfolioItem(title = "Data Analytics Tool", role = "Data Scientist", description = "Mengembangkan dashboard analitik data interaktif.", date = "Okt 2024 - Des 2024")
-    ) }
+    )
 
-    val experienceItems = remember { mutableStateListOf(
+    val experienceItems = mutableStateListOf(
         ExperienceItem(company = "PT. Tech Indonesia", position = "Backend Intern", duration = "Agu 2024 - Jan 2025"),
         ExperienceItem(company = "Open Source Community", position = "Contributor", duration = "Feb 2024 - Des 2024")
-    ) }
+    )
 
-    val skills = remember { mutableStateListOf("Python", "Kotlin", "SQL", "Data Analysis", "Git") }
+    val skills = mutableStateListOf("Python", "Kotlin", "SQL", "Data Analysis", "Git")
 
-    // State untuk Dialog CRUD
+    fun updateProfile(name: String, id: String, prodi: String, about: String) {
+        userName = name
+        userId = id
+        userProdi = prodi
+        userAbout = about
+    }
+
+    fun addOrUpdatePortfolio(item: PortfolioItem, isEdit: Boolean) {
+        if (isEdit) {
+            val index = portfolioItems.indexOfFirst { it.id == item.id }
+            if (index != -1) portfolioItems[index] = item
+        } else {
+            portfolioItems.add(item)
+        }
+    }
+
+    fun deletePortfolio(item: PortfolioItem) = portfolioItems.remove(item)
+
+    fun addOrUpdateExperience(item: ExperienceItem, isEdit: Boolean) {
+        if (isEdit) {
+            val index = experienceItems.indexOfFirst { it.id == item.id }
+            if (index != -1) experienceItems[index] = item
+        } else {
+            experienceItems.add(item)
+        }
+    }
+
+    fun deleteExperience(item: ExperienceItem) = experienceItems.remove(item)
+
+    fun addOrUpdateSkill(skill: String, index: Int) {
+        if (index != -1) {
+            skills[index] = skill
+        } else {
+            skills.add(skill)
+        }
+    }
+
+    fun deleteSkill(index: Int) {
+        if (index in skills.indices) skills.removeAt(index)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = viewModel()
+) {
+    var selectedTab by remember { mutableStateOf("Portofolio") }
+
+    var showEditDialog by remember { mutableStateOf(false) }
     var showPortoDialog by remember { mutableStateOf(false) }
     var portoToEdit by remember { mutableStateOf<PortfolioItem?>(null) }
-
     var showExpDialog by remember { mutableStateOf(false) }
     var expToEdit by remember { mutableStateOf<ExperienceItem?>(null) }
-
     var showSkillDialog by remember { mutableStateOf(false) }
     var skillToEdit by remember { mutableStateOf<String?>(null) }
     var skillEditIndex by remember { mutableStateOf(-1) }
@@ -96,58 +129,49 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
     Surface(modifier = modifier.fillMaxSize(), color = Color(0xFFF5F7FA)) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item { ProfileHeader() }
-            item { ProfileInfoCard(name = userName, id = userId, prodi = userProdi) }
+            item { ProfileInfoCard(name = viewModel.userName, id = viewModel.userId, prodi = viewModel.userProdi) }
             item { ProfileStatsSection() }
             item { ProfileActions(onEditClick = { showEditDialog = true }) }
             item { ProfileTabSection(selectedTab = selectedTab, onTabChange = { selectedTab = it }) }
 
             when (selectedTab) {
                 "Tentang" -> {
-                    item { AboutSection(aboutText = userAbout) }
+                    item { AboutSection(aboutText = viewModel.userAbout) }
                 }
                 "Portofolio" -> {
                     item {
-                        AddButton("Tambah Portofolio") {
-                            portoToEdit = null
-                            showPortoDialog = true
-                        }
+                        AddButton("Tambah Portofolio") { portoToEdit = null; showPortoDialog = true }
                     }
-                    items(portfolioItems) { item ->
+                    items(viewModel.portfolioItems) { item ->
                         PortfolioCard(
                             item = item,
                             onEdit = { portoToEdit = item; showPortoDialog = true },
-                            onDelete = { portfolioItems.remove(item) }
+                            onDelete = { viewModel.deletePortfolio(item) }
                         )
                     }
                 }
                 "Pengalaman" -> {
                     item {
-                        AddButton("Tambah Pengalaman") {
-                            expToEdit = null
-                            showExpDialog = true
-                        }
+                        AddButton("Tambah Pengalaman") { expToEdit = null; showExpDialog = true }
                     }
-                    items(experienceItems) { item ->
+                    items(viewModel.experienceItems) { item ->
                         ExperienceCard(
                             item = item,
                             onEdit = { expToEdit = item; showExpDialog = true },
-                            onDelete = { experienceItems.remove(item) }
+                            onDelete = { viewModel.deleteExperience(item) }
                         )
                     }
                 }
                 "Keahlian" -> {
                     item {
-                        AddButton("Tambah Keahlian") {
-                            skillToEdit = null
-                            showSkillDialog = true
-                        }
+                        AddButton("Tambah Keahlian") { skillToEdit = null; skillEditIndex = -1; showSkillDialog = true }
                     }
-                    items(skills.size) { index ->
-                        val skill = skills[index]
+                    items(viewModel.skills.size) { index ->
+                        val skill = viewModel.skills[index]
                         SkillCard(
                             skill = skill,
                             onEdit = { skillToEdit = skill; skillEditIndex = index; showSkillDialog = true },
-                            onDelete = { skills.removeAt(index) }
+                            onDelete = { viewModel.deleteSkill(index) }
                         )
                     }
                 }
@@ -157,10 +181,10 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
         if (showEditDialog) {
             EditProfileDialog(
-                currentName = userName, currentId = userId, currentProdi = userProdi, currentAbout = userAbout,
+                currentName = viewModel.userName, currentId = viewModel.userId, currentProdi = viewModel.userProdi, currentAbout = viewModel.userAbout,
                 onDismiss = { showEditDialog = false },
                 onSave = { name, id, prodi, about ->
-                    userName = name; userId = id; userProdi = prodi; userAbout = about
+                    viewModel.updateProfile(name, id, prodi, about)
                     showEditDialog = false
                 }
             )
@@ -171,11 +195,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 initialItem = portoToEdit,
                 onDismiss = { showPortoDialog = false },
                 onSave = { newItem ->
-                    if (portoToEdit == null) portfolioItems.add(newItem)
-                    else {
-                        val index = portfolioItems.indexOfFirst { it.id == portoToEdit!!.id }
-                        if (index != -1) portfolioItems[index] = newItem
-                    }
+                    viewModel.addOrUpdatePortfolio(newItem, portoToEdit != null)
                     showPortoDialog = false
                 }
             )
@@ -186,11 +206,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 initialItem = expToEdit,
                 onDismiss = { showExpDialog = false },
                 onSave = { newItem ->
-                    if (expToEdit == null) experienceItems.add(newItem)
-                    else {
-                        val index = experienceItems.indexOfFirst { it.id == expToEdit!!.id }
-                        if (index != -1) experienceItems[index] = newItem
-                    }
+                    viewModel.addOrUpdateExperience(newItem, expToEdit != null)
                     showExpDialog = false
                 }
             )
@@ -201,8 +217,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 initialSkill = skillToEdit,
                 onDismiss = { showSkillDialog = false },
                 onSave = { newSkill ->
-                    if (skillToEdit == null) skills.add(newSkill)
-                    else skills[skillEditIndex] = newSkill
+                    viewModel.addOrUpdateSkill(newSkill, skillEditIndex)
                     showSkillDialog = false
                 }
             )
@@ -210,7 +225,6 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
     }
 }
 
-// --- KOMPONEN DATE PICKER CUSTOM ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerField(
@@ -223,7 +237,6 @@ fun DatePickerField(
     var showDialog by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
-    // Formatter untuk menampilkan "Bulan Tahun" (Contoh: Jan 2025)
     val formatter = SimpleDateFormat("MMM yyyy", Locale("id", "ID"))
 
     Box(modifier = modifier.clickable(enabled = enabled) { if (enabled) showDialog = true }) {
@@ -231,7 +244,7 @@ fun DatePickerField(
             value = selectedDateText,
             onValueChange = { },
             label = { Text(label) },
-            enabled = false, // Disable typing, make it clickable only
+            enabled = false,
             readOnly = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
@@ -240,9 +253,7 @@ fun DatePickerField(
                 disabledLabelColor = Color.Gray,
                 disabledTrailingIconColor = Color.Gray
             ),
-            trailingIcon = {
-                Icon(Icons.Outlined.DateRange, contentDescription = "Pilih Tanggal")
-            }
+            trailingIcon = { Icon(Icons.Outlined.DateRange, contentDescription = null) }
         )
     }
 
@@ -255,27 +266,19 @@ fun DatePickerField(
                         onDateSelected(formatter.format(Date(millis)))
                     }
                     showDialog = false
-                }) {
-                    Text("Pilih")
-                }
+                }) { Text("Pilih") }
             },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) { Text("Batal") }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            dismissButton = { TextButton(onClick = { showDialog = false }) { Text("Batal") } }
+        ) { DatePicker(state = datePickerState) }
     }
 }
 
-// --- DIALOG CRUD PORTOFOLIO DENGAN KALENDER ---
 @Composable
 fun PortoDialog(initialItem: PortfolioItem?, onDismiss: () -> Unit, onSave: (PortfolioItem) -> Unit) {
     var title by remember { mutableStateOf(initialItem?.title ?: "") }
     var role by remember { mutableStateOf(initialItem?.role ?: "") }
     var desc by remember { mutableStateOf(initialItem?.description ?: "") }
 
-    // Parsing tanggal (Mulai - Selesai) jika sedang edit
     val dates = initialItem?.date?.split(" - ")
     var startDate by remember { mutableStateOf(dates?.getOrNull(0) ?: "") }
     var endDate by remember { mutableStateOf(dates?.getOrNull(1) ?: "") }
@@ -291,30 +294,13 @@ fun PortoDialog(initialItem: PortfolioItem?, onDismiss: () -> Unit, onSave: (Por
                 OutlinedTextField(value = role, onValueChange = { role = it }, label = { Text("Peran (Role)") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Row untuk Tanggal Mulai dan Selesai
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    DatePickerField(
-                        label = "Mulai",
-                        selectedDateText = startDate,
-                        onDateSelected = { startDate = it },
-                        modifier = Modifier.weight(1f)
-                    )
-                    DatePickerField(
-                        label = "Selesai",
-                        selectedDateText = if (isCurrent) "Sekarang" else endDate,
-                        onDateSelected = { endDate = it },
-                        enabled = !isCurrent,
-                        modifier = Modifier.weight(1f)
-                    )
+                    DatePickerField(label = "Mulai", selectedDateText = startDate, onDateSelected = { startDate = it }, modifier = Modifier.weight(1f))
+                    DatePickerField(label = "Selesai", selectedDateText = if (isCurrent) "Sekarang" else endDate, onDateSelected = { endDate = it }, enabled = !isCurrent, modifier = Modifier.weight(1f))
                 }
 
-                // Checkbox "Sampai Sekarang"
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
-                    Checkbox(
-                        checked = isCurrent,
-                        onCheckedChange = { isCurrent = it; if (it) endDate = "Sekarang" },
-                        colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1FABE1))
-                    )
+                    Checkbox(checked = isCurrent, onCheckedChange = { isCurrent = it; if (it) endDate = "Sekarang" }, colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1FABE1)))
                     Text("Saat ini masih berlangsung", fontSize = 13.sp, color = Color(0xFF555555))
                 }
 
@@ -338,7 +324,6 @@ fun PortoDialog(initialItem: PortfolioItem?, onDismiss: () -> Unit, onSave: (Por
     }
 }
 
-// --- DIALOG CRUD PENGALAMAN DENGAN KALENDER ---
 @Composable
 fun ExpDialog(initialItem: ExperienceItem?, onDismiss: () -> Unit, onSave: (ExperienceItem) -> Unit) {
     var company by remember { mutableStateOf(initialItem?.company ?: "") }
@@ -359,30 +344,13 @@ fun ExpDialog(initialItem: ExperienceItem?, onDismiss: () -> Unit, onSave: (Expe
                 OutlinedTextField(value = position, onValueChange = { position = it }, label = { Text("Posisi / Jabatan") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Row untuk Tanggal Mulai dan Selesai
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    DatePickerField(
-                        label = "Mulai",
-                        selectedDateText = startDate,
-                        onDateSelected = { startDate = it },
-                        modifier = Modifier.weight(1f)
-                    )
-                    DatePickerField(
-                        label = "Selesai",
-                        selectedDateText = if (isCurrent) "Sekarang" else endDate,
-                        onDateSelected = { endDate = it },
-                        enabled = !isCurrent,
-                        modifier = Modifier.weight(1f)
-                    )
+                    DatePickerField(label = "Mulai", selectedDateText = startDate, onDateSelected = { startDate = it }, modifier = Modifier.weight(1f))
+                    DatePickerField(label = "Selesai", selectedDateText = if (isCurrent) "Sekarang" else endDate, onDateSelected = { endDate = it }, enabled = !isCurrent, modifier = Modifier.weight(1f))
                 }
 
-                // Checkbox "Sampai Sekarang"
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
-                    Checkbox(
-                        checked = isCurrent,
-                        onCheckedChange = { isCurrent = it; if (it) endDate = "Sekarang" },
-                        colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1FABE1))
-                    )
+                    Checkbox(checked = isCurrent, onCheckedChange = { isCurrent = it; if (it) endDate = "Sekarang" }, colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1FABE1)))
                     Text("Saat ini masih bekerja di sini", fontSize = 13.sp, color = Color(0xFF555555))
                 }
 
@@ -403,21 +371,9 @@ fun ExpDialog(initialItem: ExperienceItem?, onDismiss: () -> Unit, onSave: (Expe
     }
 }
 
-// =========================================================================
-// KOMPONEN LAINNYA (Sama persis seperti sebelumnya)
-// =========================================================================
-
 @Composable
 fun AddButton(text: String, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF1FABE1)),
-        border = BorderStroke(1.dp, Color(0xFF1FABE1))
-    ) {
+    OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), shape = RoundedCornerShape(12.dp), colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF1FABE1)), border = BorderStroke(1.dp, Color(0xFF1FABE1))) {
         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Text(text, fontWeight = FontWeight.Bold)
@@ -426,17 +382,10 @@ fun AddButton(text: String, onClick: () -> Unit) {
 
 @Composable
 fun PortfolioCard(item: PortfolioItem, onEdit: () -> Unit, onDelete: () -> Unit) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
-    ) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), shape = RoundedCornerShape(14.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.White)) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-                Box(
-                    modifier = Modifier.size(40.dp).background(Color(0xFFE3F2FD), RoundedCornerShape(10.dp)),
-                    contentAlignment = Alignment.Center
-                ) { Icon(Icons.Default.Build, null, tint = Color(0xFF1FABE1)) }
+                Box(modifier = Modifier.size(40.dp).background(Color(0xFFE3F2FD), RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) { Icon(Icons.Default.Build, null, tint = Color(0xFF1FABE1)) }
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(item.title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color(0xFF1A1A2E))
@@ -464,11 +413,7 @@ fun PortfolioCard(item: PortfolioItem, onEdit: () -> Unit, onDelete: () -> Unit)
 
 @Composable
 fun ExperienceCard(item: ExperienceItem, onEdit: () -> Unit, onDelete: () -> Unit) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
-    ) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), shape = RoundedCornerShape(14.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.White)) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -494,15 +439,8 @@ fun ExperienceCard(item: ExperienceItem, onEdit: () -> Unit, onDelete: () -> Uni
 
 @Composable
 fun SkillCard(skill: String, onEdit: () -> Unit, onDelete: () -> Unit) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.White)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF1FABE1), modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.width(12.dp))
             Text(skill, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF1A1A2E), modifier = Modifier.weight(1f))
@@ -533,10 +471,7 @@ fun SkillDialog(initialSkill: String?, onDismiss: () -> Unit, onSave: (String) -
 }
 
 @Composable
-fun EditProfileDialog(
-    currentName: String, currentId: String, currentProdi: String, currentAbout: String,
-    onDismiss: () -> Unit, onSave: (String, String, String, String) -> Unit
-) {
+fun EditProfileDialog(currentName: String, currentId: String, currentProdi: String, currentAbout: String, onDismiss: () -> Unit, onSave: (String, String, String, String) -> Unit) {
     var tempName by remember { mutableStateOf(currentName) }
     var tempId by remember { mutableStateOf(currentId) }
     var tempProdi by remember { mutableStateOf(currentProdi) }
@@ -553,7 +488,7 @@ fun EditProfileDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(value = tempProdi, onValueChange = { tempProdi = it }, label = { Text("Program Studi") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(value = tempAbout, onValueChange = { tempAbout = it }, label = { Text("Tentang (Summary)") }, modifier = Modifier.fillMaxWidth(), minLines = 3, maxLines = 5)
+                OutlinedTextField(value = tempAbout, onValueChange = { tempAbout = it }, label = { Text("Tentang") }, modifier = Modifier.fillMaxWidth(), minLines = 3, maxLines = 5)
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) { Text("Batal", color = Color.Gray, fontWeight = FontWeight.SemiBold) }
@@ -569,9 +504,9 @@ fun EditProfileDialog(
 private fun ProfileHeader() {
     Box(modifier = Modifier.fillMaxWidth().height(140.dp).background(Color(0xFF1FABE1)).padding(top = 16.dp, start = 8.dp, end = 8.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
-            IconButton(onClick = { /* Back Action */ }) { Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White) }
+            IconButton(onClick = { }) { Icon(Icons.Filled.ArrowBack, contentDescription = null, tint = Color.White) }
             Text("USER PROFILE", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-            IconButton(onClick = { /* Settings Action */ }) { Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = Color.White) }
+            IconButton(onClick = { }) { Icon(Icons.Filled.Settings, contentDescription = null, tint = Color.White) }
         }
     }
 }
@@ -580,7 +515,7 @@ private fun ProfileHeader() {
 private fun ProfileInfoCard(name: String, id: String, prodi: String) {
     Column(modifier = Modifier.fillMaxWidth().offset(y = (-50).dp).padding(horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Surface(modifier = Modifier.size(100.dp), shape = CircleShape, color = Color.White, border = BorderStroke(4.dp, Color.White), shadowElevation = 4.dp) {
-            Image(painter = painterResource(id = R.drawable.icon_profile), contentDescription = "Profile Picture", modifier = Modifier.fillMaxSize().clip(CircleShape), contentScale = ContentScale.Crop)
+            Image(painter = painterResource(id = R.drawable.icon_profile), contentDescription = null, modifier = Modifier.fillMaxSize().clip(CircleShape), contentScale = ContentScale.Crop)
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1A1A2E))
